@@ -1,6 +1,7 @@
 import { motion } from "motion/react";
 
 export default function Lore({ onBack }: { onBack: () => void }) {
+  // Use "/lore_image.png" if you upload it to the 'public' folder
   const loreImageUrl = "https://dl.dropboxusercontent.com/scl/fi/x1tcaqqlug4148ijicq2n/gemini-3.1-flash-image-preview-nano-banana-2-_a_i_want_this_image_bu-1.png?rlkey=n8go0csm92cbxv2vu8may6o5t&st=1zzc8em1&raw=1";
 
   return (
@@ -13,7 +14,7 @@ export default function Lore({ onBack }: { onBack: () => void }) {
         src={loreImageUrl} 
         alt="Mojo Lore" 
         referrerPolicy="no-referrer"
-        className="w-full h-full object-cover"
+        className="w-full h-full object-contain"
       />
       
       {/* Back Button Overlay */}

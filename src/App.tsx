@@ -13,7 +13,8 @@ export default function App() {
   const [isPlayingIntro, setIsPlayingIntro] = useState(false);
   const [currentPage, setCurrentPage] = useState<"home" | "lore">("home");
 
-  // Dropbox link converted to direct download stream sub-domain
+  // PREFERRED: Upload these files to the 'public' folder in the file explorer for instant loading.
+  // Use locally hosted paths if you upload the files (e.g., "/0417.mp4")
   const introVideoUrl = "https://dl.dropboxusercontent.com/scl/fi/pbh5tqy7bi8pxua7zzoq3/0417.mp4?rlkey=mkgubexxwvkdhvpvcfkjx17tj&st=jzq3wsdy"; 
   const loreImageUrl = "https://dl.dropboxusercontent.com/scl/fi/x1tcaqqlug4148ijicq2n/gemini-3.1-flash-image-preview-nano-banana-2-_a_i_want_this_image_bu-1.png?rlkey=n8go0csm92cbxv2vu8may6o5t&st=1zzc8em1&raw=1";
 
