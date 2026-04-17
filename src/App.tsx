@@ -13,9 +13,9 @@ export default function App() {
   const [isPlayingIntro, setIsPlayingIntro] = useState(false);
   const [currentPage, setCurrentPage] = useState<"home" | "lore">("home");
 
-  // Assets to preload
-  const introVideoUrl = "https://www.dropbox.com/scl/fi/pbh5tqy7bi8pxua7zzoq3/0417.mp4?rlkey=mkgubexxwvkdhvpvcfkjx17tj&st=jzq3wsdy&dl=1"; 
-  const loreImageUrl = "https://www.dropbox.com/scl/fi/x1tcaqqlug4148ijicq2n/gemini-3.1-flash-image-preview-nano-banana-2-_a_i_want_this_image_bu-1.png?rlkey=n8go0csm92cbxv2vu8may6o5t&st=1zzc8em1&dl=1";
+  // Dropbox link converted to direct download stream sub-domain
+  const introVideoUrl = "https://dl.dropboxusercontent.com/scl/fi/pbh5tqy7bi8pxua7zzoq3/0417.mp4?rlkey=mkgubexxwvkdhvpvcfkjx17tj&st=jzq3wsdy"; 
+  const loreImageUrl = "https://dl.dropboxusercontent.com/scl/fi/x1tcaqqlug4148ijicq2n/gemini-3.1-flash-image-preview-nano-banana-2-_a_i_want_this_image_bu-1.png?rlkey=n8go0csm92cbxv2vu8may6o5t&st=1zzc8em1&raw=1";
 
   useEffect(() => {
     // Preload Image
@@ -57,15 +57,14 @@ export default function App() {
       <div className="fixed inset-0 z-[100] bg-black flex items-center justify-center">
         {!videoError ? (
           <video
+            src={introVideoUrl}
             autoPlay
             playsInline
             controls
             className="w-full h-full object-contain overflow-hidden"
             onEnded={handleVideoEnd}
             onError={handleVideoError}
-          >
-            <source src={introVideoUrl} type="video/mp4" />
-          </video>
+          />
         ) : (
           <div className="text-center px-6">
             <p className="text-white/70 mb-4">The video couldn't be loaded from the external source (Dropbox/Google Drive).</p>
