@@ -1,8 +1,8 @@
 import { motion } from "motion/react";
 
 export default function Lore({ onBack }: { onBack: () => void }) {
-  // Use "/lore_image.png" if you upload it to the 'public' folder
-  const loreImageUrl = "https://dl.dropboxusercontent.com/scl/fi/x1tcaqqlug4148ijicq2n/gemini-3.1-flash-image-preview-nano-banana-2-_a_i_want_this_image_bu-1.png?rlkey=n8go0csm92cbxv2vu8may6o5t&st=1zzc8em1&raw=1";
+  // Using raw GitHub link for high-performance loading
+  const loreImageUrl = "https://raw.githubusercontent.com/Tommypickles01/MOJO/refs/heads/main/IMG_5612.png";
 
   return (
     <motion.section 

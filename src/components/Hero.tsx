@@ -1,5 +1,5 @@
 export default function Hero({ hasEntered, onEnter }: { hasEntered: boolean, onEnter: () => void }) {
-  const videoUrl = "https://dnznrvs05pmza.cloudfront.net/seedance_2/cgt-20260417182431-wgx86/animate_this__IMG_2_no_random_artifacts_or_cut_scenes__static_shot__loop__no_random_things_in_the_ba.mp4?_jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJrZXlIYXNoIjoiY2FiN2M2M2M1OTA5MWJkZiIsImJ1Y2tldCI6InJ1bndheS10YXNrLWFydGlmYWN0cyIsInN0YWdlIjoicHJvZCIsImV4cCI6MTc3NjU0ODY2OH0.rQOWGb-OLHiD25SjPkIp2RqLmkJHPti2je0NOPyl0UI";
+  const videoUrl = "https://raw.githubusercontent.com/Tommypickles01/MOJO/main/15ef619663df052ee2103de4f0d90e7a34da93447680a80054853c8e47c235be.mp4";
 
   return (
     <section className="relative w-full h-screen overflow-hidden flex flex-col">

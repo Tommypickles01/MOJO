@@ -13,10 +13,9 @@ export default function App() {
   const [isPlayingIntro, setIsPlayingIntro] = useState(false);
   const [currentPage, setCurrentPage] = useState<"home" | "lore">("home");
 
-  // PREFERRED: Upload these files to the 'public' folder in the file explorer for instant loading.
-  // Use locally hosted paths if you upload the files (e.g., "/0417.mp4")
-  const introVideoUrl = "https://dl.dropboxusercontent.com/scl/fi/pbh5tqy7bi8pxua7zzoq3/0417.mp4?rlkey=mkgubexxwvkdhvpvcfkjx17tj&st=jzq3wsdy"; 
-  const loreImageUrl = "https://dl.dropboxusercontent.com/scl/fi/x1tcaqqlug4148ijicq2n/gemini-3.1-flash-image-preview-nano-banana-2-_a_i_want_this_image_bu-1.png?rlkey=n8go0csm92cbxv2vu8may6o5t&st=1zzc8em1&raw=1";
+  // Using raw GitHub links for high-performance direct streaming
+  const introVideoUrl = "https://raw.githubusercontent.com/Tommypickles01/MOJO/main/copy_1CD439B3-5424-410F-B040-131E08C4E078.mov"; 
+  const loreImageUrl = "https://raw.githubusercontent.com/Tommypickles01/MOJO/refs/heads/main/IMG_5612.png";
 
   useEffect(() => {
     // Preload Image
