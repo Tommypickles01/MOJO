@@ -1,5 +1,6 @@
 export default function Hero({ hasEntered, onEnter }: { hasEntered: boolean, onEnter: () => void }) {
-  const videoUrl = "https://raw.githubusercontent.com/Tommypickles01/MOJO/main/15ef619663df052ee2103de4f0d90e7a34da93447680a80054853c8e47c235be.mp4";
+  // Using githack to ensure correct MIME types and range requests for mobile video playback
+  const videoUrl = "https://raw.githack.com/Tommypickles01/MOJO/main/15ef619663df052ee2103de4f0d90e7a34da93447680a80054853c8e47c235be.mp4";
 
   return (
     <section className="relative w-full h-screen overflow-hidden flex flex-col">
@@ -9,6 +10,8 @@ export default function Hero({ hasEntered, onEnter }: { hasEntered: boolean, onE
         loop
         muted
         playsInline
+        crossOrigin="anonymous"
+        referrerPolicy="no-referrer"
         className="absolute inset-0 w-full h-full object-cover z-0 opacity-90"
       >
         <source src={videoUrl} type="video/mp4" />

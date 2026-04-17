@@ -13,25 +13,14 @@ export default function App() {
   const [isPlayingIntro, setIsPlayingIntro] = useState(false);
   const [currentPage, setCurrentPage] = useState<"home" | "lore">("home");
 
-  // Using raw GitHub links for high-performance direct streaming
-  const introVideoUrl = "https://raw.githubusercontent.com/Tommypickles01/MOJO/main/copy_1CD439B3-5424-410F-B040-131E08C4E078.mov"; 
-  const loreImageUrl = "https://raw.githubusercontent.com/Tommypickles01/MOJO/refs/heads/main/IMG_5612.png";
+  // Using GitHack as a proxy to ensure correct MIME types and Range Request support for mobile browsers.
+  const introVideoUrl = "https://raw.githack.com/Tommypickles01/MOJO/main/copy_1CD439B3-5424-410F-B040-131E08C4E078.mov"; 
+  const loreImageUrl = "https://raw.githack.com/Tommypickles01/MOJO/main/IMG_5612.png";
 
   useEffect(() => {
     // Preload Image
     const img = new Image();
     img.src = loreImageUrl;
-
-    // Preload Video (via hidden link tag in head for modern browsers)
-    const link = document.createElement('link');
-    link.rel = 'preload';
-    link.as = 'video';
-    link.href = introVideoUrl;
-    document.head.appendChild(link);
-
-    return () => {
-      document.head.removeChild(link);
-    };
   }, []);
 
   // Using the direct download link for the Dropbox video
@@ -61,6 +50,8 @@ export default function App() {
             autoPlay
             playsInline
             controls
+            crossOrigin="anonymous"
+            referrerPolicy="no-referrer"
             className="w-full h-full object-contain overflow-hidden"
             onEnded={handleVideoEnd}
             onError={handleVideoError}
