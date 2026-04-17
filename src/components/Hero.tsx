@@ -1,18 +1,19 @@
-export default function Hero({ hasEntered, onEnter }: { hasEntered: boolean, onEnter: () => void }) {
-  const videoUrl = "https://raw.githubusercontent.com/Tommypickles01/MOJO/main/15ef619663df052ee2103de4f0d90e7a34da93447680a80054853c8e47c235be.mp4";
-
+export default function Hero({ hasEntered, onEnter, videoUrl }: { hasEntered: boolean, onEnter: () => void, videoUrl: string }) {
   return (
     <section className="relative w-full h-screen overflow-hidden flex flex-col">
       {/* Background Video */}
       <video
+        src={videoUrl}
         autoPlay
         loop
         muted
         playsInline
-        className="absolute inset-0 w-full h-full object-cover z-0 opacity-90"
-      >
-        <source src={videoUrl} type="video/mp4" />
-      </video>
+        preload="auto"
+        className="absolute inset-0 w-full h-full object-cover z-0 opacity-90 transition-opacity duration-1000"
+        onCanPlay={(e) => {
+          (e.target as HTMLVideoElement).classList.add('opacity-100');
+        }}
+      />
 
       {/* Atmospheric Overlay */}
       <div 
