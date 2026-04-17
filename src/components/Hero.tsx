@@ -3,17 +3,14 @@ export default function Hero({ hasEntered, onEnter, videoUrl }: { hasEntered: bo
     <section className="relative w-full h-screen overflow-hidden flex flex-col">
       {/* Background Video */}
       <video
-        src={videoUrl}
         autoPlay
         loop
         muted
         playsInline
-        preload="auto"
-        className="absolute inset-0 w-full h-full object-cover z-0 opacity-90 transition-opacity duration-1000"
-        onCanPlay={(e) => {
-          (e.target as HTMLVideoElement).classList.add('opacity-100');
-        }}
-      />
+        className="absolute inset-0 w-full h-full object-cover z-0 opacity-100"
+      >
+        <source src={videoUrl} type="video/mp4" />
+      </video>
 
       {/* Atmospheric Overlay */}
       <div 

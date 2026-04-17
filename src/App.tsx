@@ -13,33 +13,15 @@ export default function App() {
   const [isPlayingIntro, setIsPlayingIntro] = useState(false);
   const [currentPage, setCurrentPage] = useState<"home" | "lore">("home");
 
-  // Using raw GitHub links for high-performance direct streaming
-  const introVideoUrl = "https://raw.githubusercontent.com/Tommypickles01/MOJO/main/copy_1CD439B3-5424-410F-B040-131E08C4E078.mov"; 
+  // Using stable raw GitHub links with correct pathing
+  const introVideoUrl = "https://raw.githubusercontent.com/Tommypickles01/MOJO/refs/heads/main/copy_1CD439B3-5424-410F-B040-131E08C4E078.mov"; 
   const loreImageUrl = "https://raw.githubusercontent.com/Tommypickles01/MOJO/refs/heads/main/IMG_5612.png";
-  const bgVideoUrl = "https://raw.githubusercontent.com/Tommypickles01/MOJO/main/15ef619663df052ee2103de4f0d90e7a34da93447680a80054853c8e47c235be.mp4";
+  const bgVideoUrl = "https://raw.githubusercontent.com/Tommypickles01/MOJO/refs/heads/main/15ef619663df052ee2103de4f0d90e7a34da93447680a80054853c8e47c235be.mp4";
 
   useEffect(() => {
     // Preload Images
     const img = new Image();
     img.src = loreImageUrl;
-
-    // Preload Videos (via hidden link tags)
-    const preloadVideo = (url: string) => {
-      const link = document.createElement('link');
-      link.rel = 'preload';
-      link.as = 'video';
-      link.href = url;
-      document.head.appendChild(link);
-      return link;
-    };
-
-    const introLink = preloadVideo(introVideoUrl);
-    const bgLink = preloadVideo(bgVideoUrl);
-
-    return () => {
-      document.head.removeChild(introLink);
-      document.head.removeChild(bgLink);
-    };
   }, []);
 
   // Using the direct download link for the Dropbox video
