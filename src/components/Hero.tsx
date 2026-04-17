@@ -1,4 +1,6 @@
-export default function Hero({ hasEntered, onEnter, videoUrl }: { hasEntered: boolean, onEnter: () => void, videoUrl: string }) {
+export default function Hero({ hasEntered, onEnter }: { hasEntered: boolean, onEnter: () => void }) {
+  const videoUrl = "https://raw.githubusercontent.com/Tommypickles01/MOJO/main/15ef619663df052ee2103de4f0d90e7a34da93447680a80054853c8e47c235be.mp4";
+
   return (
     <section className="relative w-full h-screen overflow-hidden flex flex-col">
       {/* Background Video */}
@@ -7,7 +9,7 @@ export default function Hero({ hasEntered, onEnter, videoUrl }: { hasEntered: bo
         loop
         muted
         playsInline
-        className="absolute inset-0 w-full h-full object-cover z-0 opacity-100"
+        className="absolute inset-0 w-full h-full object-cover z-0 opacity-90"
       >
         <source src={videoUrl} type="video/mp4" />
       </video>
