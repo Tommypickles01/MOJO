@@ -1,5 +1,5 @@
-import { useEffect, useRef, useState, Suspense } from "react";
-import { Canvas, useFrame } from "@react-three/fiber";
+import { useEffect, useRef, useState, Suspense, useMemo } from "react";
+import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { useGLTF, Environment, Float, PerspectiveCamera, Clone } from "@react-three/drei";
 import * as THREE from "three";
 import { motion, AnimatePresence } from "motion/react";
@@ -149,115 +149,42 @@ function Garden() {
   );
 }
 
-function GameScene({ 
-    gameState, 
-    onScore, 
-    onGameOver, 
-    playerPosition,
-    score
-}: { 
-    gameState: string, 
-    onScore: () => void, 
-    onGameOver: () => void,
+function GameItem({ item, playerPosition, onScore, onGameOver, onRemove, bananaScene }: { 
+    item: GameObject, 
     playerPosition: [number, number, number],
-    score: number
+    onScore: () => void,
+    onGameOver: () => void,
+    onRemove: (id: number) => void,
+    bananaScene: THREE.Group
 }) {
-  const [items, setItems] = useState<GameObject[]>([]);
-  const [shakeIntensity, setShakeIntensity] = useState(0);
-  const lastSpawn = useRef(0);
-  const lastShakeScore = useRef(0);
-  const sceneRef = useRef<THREE.Group>(null);
-  const { scene: bananaScene } = useGLTF(ASSETS.BANANA);
-
-  // Screen shake logic for every 20th banana
-  useEffect(() => {
-    if (score > 0 && score % 20 === 0 && score !== lastShakeScore.current) {
-        setShakeIntensity(1.5);
-        lastShakeScore.current = score;
-    }
-  }, [score]);
-
-  // Aggressive yellow color injection
-  useEffect(() => {
-    bananaScene.traverse((child) => {
-      if ((child as THREE.Mesh).isMesh) {
-        const mesh = child as THREE.Mesh;
-        const mat = mesh.material as THREE.MeshStandardMaterial;
-        mat.color.set("#ffd300"); // Vibrant Sunflower Yellow
-        mat.emissive.set("#ffb300"); // Warm golden glow
-        mat.emissiveIntensity = 0.5;
-        mat.metalness = 0;
-        mat.roughness = 0.6;
-      }
-    });
-  }, [bananaScene]);
-
-  useFrame((state, delta) => {
-    if (gameState !== "playing") return;
-
-    // Decay screen shake
-    if (shakeIntensity > 0) {
-        setShakeIntensity(prev => Math.max(0, prev - delta * 3));
-    }
-
-    if (sceneRef.current && shakeIntensity > 0) {
-        sceneRef.current.position.x = (Math.random() - 0.5) * shakeIntensity;
-        sceneRef.current.position.y = (Math.random() - 0.5) * shakeIntensity;
-    } else if (sceneRef.current) {
-        sceneRef.current.position.set(0, 0, 0);
-    }
-
-    if (state.clock.elapsedTime - lastSpawn.current > 1.25) {
-      const type = Math.random() > 0.3 ? "banana" : "hazard";
-      setItems(prev => [...prev, {
-        id: Math.random(),
-        position: [Math.random() * 16 - 8, 12, -2],
-        type,
-        speed: 5 + Math.random() * 4
-      }]);
-      lastSpawn.current = state.clock.elapsedTime;
-    }
-
-    setItems(prev => {
-        const next = [];
-        for (const item of prev) {
-            const newY = item.position[1] - (item.speed * delta);
-            
-            const dx = item.position[0] - playerPosition[0];
-            const dy = newY - playerPosition[1];
-            const dist = Math.sqrt(dx * dx + dy * dy);
-
-            // Slightly tighter collision for the bombs
-            const colDist = item.type === "hazard" ? 1.4 : 1.2;
-
-            if (dist < colDist) {
-                if (item.type === "banana") {
-                    onScore();
-                    continue;
-                } else {
-                    onGameOver();
-                }
-            }
-
-            if (newY > -10) {
-                next.push({ ...item, position: [item.position[0], newY, item.position[2]] });
+    const ref = useRef<THREE.Group>(null);
+    
+    useFrame((_state, delta) => {
+        if (!ref.current) return;
+        ref.current.position.y -= item.speed * delta;
+        
+        // Collision Detection
+        const dx = ref.current.position.x - playerPosition[0];
+        const dy = ref.current.position.y - playerPosition[1];
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        
+        const colDist = item.type === "hazard" ? 1.4 : 1.2;
+        if (dist < colDist) {
+            if (item.type === "banana") {
+                onScore();
+                onRemove(item.id);
+            } else {
+                onGameOver();
             }
         }
-        return next;
+        
+        if (ref.current.position.y < -12) {
+            onRemove(item.id);
+        }
     });
-  });
 
-  return (
-    <>
-      <color attach="background" args={["#a9d6e5"]} />
-      <fog attach="fog" args={["#a9d6e5", 20, 100]} />
-      
-      <group ref={sceneRef}>
-        <Garden />
-        <Mojo position={playerPosition} score={score} />
-
-        {items.map(item => (
-          <group key={item.id} position={item.position} rotation={[0, item.id * 10, 0]}>
+    return (
+        <group ref={ref} position={item.position} rotation={[0, item.id * 10, 0]}>
             <Float speed={4} rotationIntensity={item.type === "banana" ? 2 : 0.5}>
                {item.type === "banana" ? (
                   <>
@@ -271,14 +198,129 @@ function GameScene({
                   <Hazard />
                )}
             </Float>
-          </group>
+        </group>
+    );
+}
+
+function GameScene({ 
+    gameState, 
+    onScore, 
+    onGameOver, 
+    score,
+    targetX
+}: { 
+    gameState: string, 
+    onScore: () => void, 
+    onGameOver: () => void,
+    score: number,
+    targetX: number
+}) {
+  const [items, setItems] = useState<GameObject[]>([]);
+  const lastSpawn = useRef(0);
+  const lastShakeScore = useRef(0);
+  const shakeRef = useRef(0);
+  const sceneRef = useRef<THREE.Group>(null);
+  const { viewport } = useThree();
+  const { scene: bananaScene } = useGLTF(ASSETS.BANANA);
+
+  const [currentX, setCurrentX] = useState(0);
+
+  // Responsive player position at Z=-2
+  const playerY = -1;
+  const playerZ = -2;
+
+  // LERP for buttery smooth movement
+  useFrame((_state, delta) => {
+    const targetWorldX = targetX * viewport.width * 1.1; // 1.1 multiplier for extra reach
+    const lerpSpeed = 15; // High responsiveness
+    setCurrentX(prev => THREE.MathUtils.lerp(prev, targetWorldX, delta * lerpSpeed));
+  });
+
+  const playerPos: [number, number, number] = [currentX, playerY, playerZ];
+
+  // Boundaries calculation
+  const spawnWidth = viewport.width * 0.9;
+
+  // Screen shake trigger logic
+  useEffect(() => {
+    if (score > 0 && score % 20 === 0 && score !== lastShakeScore.current) {
+        shakeRef.current = 1.2;
+        lastShakeScore.current = score;
+    }
+  }, [score]);
+
+  // Banana styling
+  useMemo(() => {
+    bananaScene.traverse((child) => {
+      if ((child as THREE.Mesh).isMesh) {
+        const mesh = child as THREE.Mesh;
+        const mat = mesh.material as THREE.MeshStandardMaterial;
+        mat.color.set("#ffd300");
+        mat.emissive.set("#ffb300");
+        mat.emissiveIntensity = 0.5;
+        mat.metalness = 0;
+        mat.roughness = 0.6;
+      }
+    });
+  }, [bananaScene]);
+
+  useFrame((state, delta) => {
+    if (gameState !== "playing") return;
+
+    // Shake logic (Direct Ref Manipulation = High Perf)
+    if (shakeRef.current > 0) {
+        shakeRef.current = Math.max(0, shakeRef.current - delta * 2.5);
+        if (sceneRef.current) {
+            sceneRef.current.position.x = (Math.random() - 0.5) * shakeRef.current;
+            sceneRef.current.position.y = (Math.random() - 0.5) * shakeRef.current;
+        }
+    } else if (sceneRef.current && (sceneRef.current.position.x !== 0 || sceneRef.current.position.y !== 0)) {
+        sceneRef.current.position.set(0, 0, 0);
+    }
+
+    // Spawn Logic
+    if (state.clock.elapsedTime - lastSpawn.current > 1.1) {
+      const type = Math.random() > 0.35 ? "banana" : "hazard";
+      setItems(prev => [...prev, {
+        id: Math.random(),
+        position: [ (Math.random() - 0.5) * spawnWidth, 12, playerZ ],
+        type,
+        speed: 6 + Math.random() * 5
+      }]);
+      lastSpawn.current = state.clock.elapsedTime;
+    }
+  });
+
+  const removeItem = (id: number) => {
+    setItems(prev => prev.filter(i => i.id !== id));
+  };
+
+  return (
+    <>
+      <color attach="background" args={["#a9d6e5"]} />
+      <fog attach="fog" args={["#a9d6e5", 15, 60]} />
+      
+      <group ref={sceneRef}>
+        <Garden />
+        <Mojo position={playerPos} score={score} />
+
+        {items.map(item => (
+          <GameItem 
+            key={item.id} 
+            item={item} 
+            playerPosition={playerPos}
+            onScore={onScore}
+            onGameOver={onGameOver}
+            onRemove={removeItem}
+            bananaScene={bananaScene}
+          />
         ))}
       </group>
 
       <Environment preset="forest" />
-      <ambientLight intensity={1} />
-      <directionalLight position={[10, 20, 10]} intensity={3} color="#fffcf2" castShadow />
-      <pointLight position={[0, 10, 5]} intensity={2} color="#ffffff" />
+      <ambientLight intensity={1.2} />
+      <directionalLight position={[10, 20, 10]} intensity={2.5} color="#fffcf2" castShadow />
+      <pointLight position={[0, 10, 5]} intensity={1.5} color="#ffffff" />
     </>
   );
 }
@@ -287,20 +329,20 @@ export default function Game({ onBack }: GameProps) {
   const [gameState, setGameState] = useState<"start" | "playing" | "gameover">("start");
   const [score, setScore] = useState(0);
   const [highScore, setHighScore] = useState(0);
-  const [playerPosition, setPlayerPosition] = useState<[number, number, number]>([0, -1, -2]);
+  const [targetX, setTargetX] = useState(0);
 
   useEffect(() => {
     const saved = localStorage.getItem("mojo_quest_3d_highscore");
     if (saved) setHighScore(parseInt(saved));
   }, []);
 
-  // Input Handling: Use window listener for better reliability
+  // Input Handling: Map X-ratio to viewport range
   useEffect(() => {
     const handleMove = (e: MouseEvent | TouchEvent) => {
       if (gameState !== "playing") return;
       const xPos = 'touches' in e ? e.touches[0].clientX : (e as MouseEvent).clientX;
-      const xMapped = (xPos / window.innerWidth) * 16 - 8;
-      setPlayerPosition([xMapped, -1, -2]);
+      const ratio = (xPos / window.innerWidth) - 0.5; // -0.5 to 0.5
+      setTargetX(ratio); // Pass fractional ratio, GameScene will map to actual viewport width
     };
 
     window.addEventListener("mousemove", handleMove);
@@ -314,7 +356,7 @@ export default function Game({ onBack }: GameProps) {
   const startGame = () => {
     setScore(0);
     setGameState("playing");
-    setPlayerPosition([0, -1, -2]);
+    setTargetX(0);
   };
 
   const endGame = () => {
@@ -331,6 +373,7 @@ export default function Game({ onBack }: GameProps) {
   return (
     <div 
         className="fixed inset-0 z-50 bg-[#a9d6e5] flex flex-col items-center justify-center overflow-hidden touch-none"
+        style={{ backgroundColor: '#a9d6e5' }}
     >
       {/* 3D Scene */}
       <Suspense fallback={<div className="text-white font-mono animate-pulse">INITIATING MOJO REALM...</div>}>
@@ -340,7 +383,7 @@ export default function Game({ onBack }: GameProps) {
             gameState={gameState} 
             onScore={() => setScore(s => s + 1)} 
             onGameOver={endGame}
-            playerPosition={playerPosition}
+            targetX={targetX}
             score={score}
           />
         </Canvas>

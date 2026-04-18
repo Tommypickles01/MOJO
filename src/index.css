@@ -7,7 +7,7 @@
   --font-display: "Instrument Serif", serif;
   --font-body: "Inter", sans-serif;
 
-  --color-background: hsl(0 0% 0%);
+  --color-background: #a9d6e5;
   --color-foreground: hsl(0 0% 100%);
   --color-muted-foreground: hsl(240 4% 66%);
   --color-primary: hsl(0 0% 100%);
@@ -20,7 +20,7 @@
 }
 
 :root {
-  --background: 0 0% 0%;
+  --background: 200 45% 78%; /* Approximately #a9d6e5 */
   --foreground: 0 0% 100%;
   --muted-foreground: 240 4% 66%;
   --primary: 0 0% 100%;
@@ -38,7 +38,8 @@
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground font-body antialiased;
+    @apply bg-[#a9d6e5] text-foreground font-body antialiased;
+    background-color: #a9d6e5;
   }
 }
 

@@ -1,6 +1,6 @@
 export default function Hero({ hasEntered, onEnter }: { hasEntered: boolean, onEnter: () => void }) {
   // Using githack to ensure correct MIME types and range requests for mobile video playback
-  const videoUrl = "https://raw.githack.com/Tommypickles01/MOJO/main/15ef619663df052ee2103de4f0d90e7a34da93447680a80054853c8e47c235be.mp4";
+  const videoUrl = "https://raw.githack.com/Tommypickles01/MOJO/main/Seedance%2020%20-%20animate%20this%20_IMG_2%20no%20random%20artifacts%20or%20cut%20scenes%20static%20shot%20loop%20no%20random%20t.mp4";
 
   return (
     <section className="relative w-full h-screen overflow-hidden flex flex-col">
