@@ -50,7 +50,6 @@ export default function App() {
             autoPlay
             playsInline
             controls
-            crossOrigin="anonymous"
             className="w-full h-full object-contain overflow-hidden"
             onEnded={handleVideoEnd}
             onError={handleVideoError}

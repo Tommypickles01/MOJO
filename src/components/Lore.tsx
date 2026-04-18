@@ -10,10 +10,8 @@ export default function Lore({ onBack }: { onBack: () => void }) {
       className="fixed inset-0 z-40 bg-black"
     >
       <img 
-        src={loreImageUrl} 
-        alt="Mojo Lore" 
-        referrerPolicy="no-referrer"
-        crossOrigin="anonymous"
+        src={loreImageUrl}
+        alt="Mojo Lore"
         className="w-full h-full object-contain"
       />
       

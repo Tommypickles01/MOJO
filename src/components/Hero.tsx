@@ -9,7 +9,6 @@ export default function Hero({ hasEntered, onEnter }: { hasEntered: boolean, onE
         loop
         muted
         playsInline
-        crossOrigin="anonymous"
         className="absolute inset-0 w-full h-full object-cover z-0 opacity-90"
       >
         <source src={videoUrl} type="video/mp4" />
