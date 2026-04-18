@@ -14,9 +14,8 @@ export default function App() {
   const [isPlayingIntro, setIsPlayingIntro] = useState(false);
   const [currentPage, setCurrentPage] = useState<"home" | "lore" | "game">("home");
 
-  // Using GitHack as a proxy to ensure correct MIME types and Range Request support for mobile browsers.
-  const introVideoUrl = "https://raw.githack.com/Tommypickles01/MOJO/main/enter.mp4"; 
-  const loreImageUrl = "https://raw.githack.com/Tommypickles01/MOJO/main/lore.png";
+  const introVideoUrl = "/enter.mp4"; 
+  const loreImageUrl = "/lore.png";
 
   useEffect(() => {
     // Preload Image

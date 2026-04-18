@@ -1,8 +1,7 @@
 import { motion } from "motion/react";
 
 export default function Lore({ onBack }: { onBack: () => void }) {
-  // Using githack to ensure correct MIME types and compatibility
-  const loreImageUrl = "https://raw.githack.com/Tommypickles01/MOJO/main/lore.png";
+  const loreImageUrl = "/lore.png";
 
   return (
     <motion.section 

@@ -84,11 +84,15 @@ function Banana({ position, onCollect }: { position: [number, number, number], o
   );
 }
 
-function Mojo({ position, score }: { position: [number, number, number], score: number }) {
+function Mojo({ targetXRef, score }: { targetXRef: React.MutableRefObject<number>, score: number }) {
   const { scene } = useGLTF(ASSETS.MOJO);
   const ref = useRef<THREE.Group>(null);
   const [isExcited, setIsExcited] = useState(false);
   const lastScore = useRef(score);
+  const { viewport } = useThree();
+
+  // Snapshot position for collision
+  const currentPos = useRef(new THREE.Vector3(0, -1, -2));
 
   useEffect(() => {
     if (scene) {
@@ -100,7 +104,6 @@ function Mojo({ position, score }: { position: [number, number, number], score: 
     }
   }, [scene]);
 
-  // Engagement effect: Mojo gets excited every 5th banana
   useEffect(() => {
     if (score > lastScore.current) {
       if (score % 5 === 0 && score > 0) {
@@ -112,17 +115,25 @@ function Mojo({ position, score }: { position: [number, number, number], score: 
     lastScore.current = score;
   }, [score]);
 
-  useFrame((state) => {
+  useFrame((state, delta) => {
     if (ref.current) {
-      ref.current.position.lerp(new THREE.Vector3(...position), 0.1);
+      // Calculate target world X based on viewport and Ref input
+      // targetXRef.current is -0.5 to 0.5
+      const targetWorldX = targetXRef.current * viewport.width * 1.2;
       
-      // Happy jump/shake when excited (every 5th banana)
+      // Buttery smooth LERP but very snappy (lerp 15-20)
+      ref.current.position.x = THREE.MathUtils.lerp(ref.current.position.x, targetWorldX, delta * 20);
+      ref.current.position.y = -1;
+      ref.current.position.z = -2;
+
+      // Update position for external reference if needed
+      currentPos.current.copy(ref.current.position);
+      
       if (isExcited) {
         ref.current.position.y += Math.sin(state.clock.elapsedTime * 30) * 0.2 + 0.5;
         ref.current.rotation.z = Math.sin(state.clock.elapsedTime * 40) * 0.2;
       }
 
-      // Base idle animation
       ref.current.rotation.y = -Math.PI / 2 + Math.sin(state.clock.elapsedTime * 2) * 0.05;
       ref.current.rotation.x = 0.2; 
     }
@@ -149,26 +160,33 @@ function Garden() {
   );
 }
 
-function GameItem({ item, playerPosition, onScore, onGameOver, onRemove, bananaScene }: { 
+function GameItem({ item, targetXRef, viewport, onScore, onGameOver, onRemove, bananaScene }: { 
     item: GameObject, 
-    playerPosition: [number, number, number],
+    targetXRef: React.MutableRefObject<number>,
+    viewport: any,
     onScore: () => void,
     onGameOver: () => void,
     onRemove: (id: number) => void,
     bananaScene: THREE.Group
 }) {
     const ref = useRef<THREE.Group>(null);
-    
+    const playerXRef = useRef(0);
+
     useFrame((_state, delta) => {
         if (!ref.current) return;
         ref.current.position.y -= item.speed * delta;
         
+        // Calculate player position snap for accurate collision (matches Mojo's snappy movement)
+        // We use the same math as Mojo but inside the item loop for accuracy
+        const targetWorldX = targetXRef.current * viewport.width * 1.2;
+        playerXRef.current = THREE.MathUtils.lerp(playerXRef.current, targetWorldX, delta * 20);
+
         // Collision Detection
-        const dx = ref.current.position.x - playerPosition[0];
-        const dy = ref.current.position.y - playerPosition[1];
+        const dx = ref.current.position.x - playerXRef.current;
+        const dy = ref.current.position.y - (-1); // playerY is -1
         const dist = Math.sqrt(dx * dx + dy * dy);
         
-        const colDist = item.type === "hazard" ? 1.4 : 1.2;
+        const colDist = item.type === "hazard" ? 1.5 : 1.3;
         if (dist < colDist) {
             if (item.type === "banana") {
                 onScore();
@@ -207,39 +225,26 @@ function GameScene({
     onScore, 
     onGameOver, 
     score,
-    targetX
+    targetXRef
 }: { 
     gameState: string, 
     onScore: () => void, 
     onGameOver: () => void,
     score: number,
-    targetX: number
+    targetXRef: React.MutableRefObject<number>
 }) {
   const [items, setItems] = useState<GameObject[]>([]);
   const lastSpawn = useRef(0);
   const lastShakeScore = useRef(0);
   const shakeRef = useRef(0);
   const sceneRef = useRef<THREE.Group>(null);
+  const mojoRef = useRef<THREE.Group>(null);
   const { viewport } = useThree();
   const { scene: bananaScene } = useGLTF(ASSETS.BANANA);
 
-  const [currentX, setCurrentX] = useState(0);
-
-  // Responsive player position at Z=-2
-  const playerY = -1;
-  const playerZ = -2;
-
-  // LERP for buttery smooth movement
-  useFrame((_state, delta) => {
-    const targetWorldX = targetX * viewport.width * 1.1; // 1.1 multiplier for extra reach
-    const lerpSpeed = 15; // High responsiveness
-    setCurrentX(prev => THREE.MathUtils.lerp(prev, targetWorldX, delta * lerpSpeed));
-  });
-
-  const playerPos: [number, number, number] = [currentX, playerY, playerZ];
-
   // Boundaries calculation
   const spawnWidth = viewport.width * 0.9;
+  const playerZ = -2;
 
   // Screen shake trigger logic
   useEffect(() => {
@@ -302,13 +307,18 @@ function GameScene({
       
       <group ref={sceneRef}>
         <Garden />
-        <Mojo position={playerPos} score={score} />
+        <Mojo 
+          ref={mojoRef}
+          targetXRef={targetXRef} 
+          score={score} 
+        />
 
         {items.map(item => (
           <GameItem 
             key={item.id} 
             item={item} 
-            playerPosition={playerPos}
+            targetXRef={targetXRef}
+            viewport={viewport}
             onScore={onScore}
             onGameOver={onGameOver}
             onRemove={removeItem}
@@ -329,20 +339,20 @@ export default function Game({ onBack }: GameProps) {
   const [gameState, setGameState] = useState<"start" | "playing" | "gameover">("start");
   const [score, setScore] = useState(0);
   const [highScore, setHighScore] = useState(0);
-  const [targetX, setTargetX] = useState(0);
+  const targetXRef = useRef(0);
 
   useEffect(() => {
     const saved = localStorage.getItem("mojo_quest_3d_highscore");
     if (saved) setHighScore(parseInt(saved));
   }, []);
 
-  // Input Handling: Map X-ratio to viewport range
+  // Input Handling: Use Ref to avoid laggy React re-renders
   useEffect(() => {
     const handleMove = (e: MouseEvent | TouchEvent) => {
       if (gameState !== "playing") return;
       const xPos = 'touches' in e ? e.touches[0].clientX : (e as MouseEvent).clientX;
       const ratio = (xPos / window.innerWidth) - 0.5; // -0.5 to 0.5
-      setTargetX(ratio); // Pass fractional ratio, GameScene will map to actual viewport width
+      targetXRef.current = ratio;
     };
 
     window.addEventListener("mousemove", handleMove);
@@ -356,7 +366,7 @@ export default function Game({ onBack }: GameProps) {
   const startGame = () => {
     setScore(0);
     setGameState("playing");
-    setTargetX(0);
+    targetXRef.current = 0;
   };
 
   const endGame = () => {
@@ -383,7 +393,7 @@ export default function Game({ onBack }: GameProps) {
             gameState={gameState} 
             onScore={() => setScore(s => s + 1)} 
             onGameOver={endGame}
-            targetX={targetX}
+            targetXRef={targetXRef}
             score={score}
           />
         </Canvas>
