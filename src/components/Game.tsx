@@ -329,11 +329,13 @@ function GameScene({
 
       <Environment preset="forest" />
       <ambientLight intensity={1.2} />
-      <directionalLight position={[10, 20, 10]} intensity={2.5} color="#fffcf2" castShadow />
+      <directionalLight position={[10, 20, 10]} intensity={2.5} color="#fffcf2" castShadow={!isMobile} />
       <pointLight position={[0, 10, 5]} intensity={1.5} color="#ffffff" />
     </>
   );
 }
+
+const isMobile = typeof window !== "undefined" && window.matchMedia("(hover: none) and (pointer: coarse)").matches;
 
 export default function Game({ onBack }: GameProps) {
   const [gameState, setGameState] = useState<"start" | "playing" | "gameover">("start");
@@ -350,8 +352,9 @@ export default function Game({ onBack }: GameProps) {
   useEffect(() => {
     const handleMove = (e: MouseEvent | TouchEvent) => {
       if (gameState !== "playing") return;
+      if ('touches' in e) e.preventDefault();
       const xPos = 'touches' in e ? e.touches[0].clientX : (e as MouseEvent).clientX;
-      const ratio = (xPos / window.innerWidth) - 0.5; // -0.5 to 0.5
+      const ratio = (xPos / window.innerWidth) - 0.5;
       targetXRef.current = ratio;
     };
 
@@ -387,7 +390,7 @@ export default function Game({ onBack }: GameProps) {
     >
       {/* 3D Scene */}
       <Suspense fallback={<div className="text-white font-mono animate-pulse">INITIATING MOJO REALM...</div>}>
-        <Canvas shadows dpr={[1, 2]}>
+        <Canvas shadows={!isMobile} dpr={isMobile ? [1, 1.5] : [1, 2]}>
           <PerspectiveCamera makeDefault position={[0, 2, 8]} fov={50} />
           <GameScene 
             gameState={gameState} 
@@ -434,14 +437,22 @@ export default function Game({ onBack }: GameProps) {
                 >
                     Mojo Quest
                 </motion.h2>
-                <motion.p 
+                <motion.p
                     initial={{ y: 20, opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
                     transition={{ delay: 0.1 }}
-                    className="text-white/60 mb-12 text-lg font-light tracking-wide leading-relaxed"
+                    className="text-white/60 mb-4 text-lg font-light tracking-wide leading-relaxed"
                 >
                     Navigate the garden of abundance. <br/>
                     Collect the photorealistic yield. Avoid extinction.
+                </motion.p>
+                <motion.p
+                    initial={{ y: 20, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    transition={{ delay: 0.15 }}
+                    className="text-white/40 mb-8 text-sm tracking-widest uppercase"
+                >
+                    {isMobile ? "Slide finger left & right to move" : "Move mouse left & right to move"}
                 </motion.p>
                 <motion.button 
                     initial={{ y: 20, opacity: 0 }}

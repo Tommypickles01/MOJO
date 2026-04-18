@@ -48,6 +48,7 @@ export default function App() {
           <video
             src={introVideoUrl}
             autoPlay
+            muted
             playsInline
             controls
             className="w-full h-full object-contain overflow-hidden"
