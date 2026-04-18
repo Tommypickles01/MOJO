@@ -7,11 +7,12 @@ import { useState, useEffect } from "react";
 import Hero from "./components/Hero";
 import Navbar from "./components/Navbar";
 import Lore from "./components/Lore";
+import Game from "./components/Game";
 
 export default function App() {
   const [hasEntered, setHasEntered] = useState(false);
   const [isPlayingIntro, setIsPlayingIntro] = useState(false);
-  const [currentPage, setCurrentPage] = useState<"home" | "lore">("home");
+  const [currentPage, setCurrentPage] = useState<"home" | "lore" | "game">("home");
 
   // Using GitHack as a proxy to ensure correct MIME types and Range Request support for mobile browsers.
   const introVideoUrl = "https://raw.githack.com/Tommypickles01/MOJO/main/copy_1CD439B3-5424-410F-B040-131E08C4E078.mov"; 
@@ -51,7 +52,6 @@ export default function App() {
             playsInline
             controls
             crossOrigin="anonymous"
-            referrerPolicy="no-referrer"
             className="w-full h-full object-contain overflow-hidden"
             onEnded={handleVideoEnd}
             onError={handleVideoError}
@@ -90,8 +90,10 @@ export default function App() {
       
       {currentPage === "home" ? (
         <Hero hasEntered={hasEntered} onEnter={handleEnter} />
-      ) : (
+      ) : currentPage === "lore" ? (
         <Lore onBack={() => setCurrentPage("home")} />
+      ) : (
+        <Game onBack={() => setCurrentPage("home")} />
       )}
     </main>
   );

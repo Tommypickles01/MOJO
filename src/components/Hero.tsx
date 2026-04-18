@@ -11,7 +11,6 @@ export default function Hero({ hasEntered, onEnter }: { hasEntered: boolean, onE
         muted
         playsInline
         crossOrigin="anonymous"
-        referrerPolicy="no-referrer"
         className="absolute inset-0 w-full h-full object-cover z-0 opacity-90"
       >
         <source src={videoUrl} type="video/mp4" />
@@ -19,22 +18,28 @@ export default function Hero({ hasEntered, onEnter }: { hasEntered: boolean, onE
 
       {/* Atmospheric Overlay */}
       <div 
-        className="absolute inset-0 z-[1]" 
+        className="absolute inset-0 z-[1] bg-black/50" 
         style={{ 
-          background: 'radial-gradient(circle at center, transparent 0%, rgba(0,0,0,0.25) 100%)' 
+          background: 'linear-gradient(to bottom, rgba(0,0,0,0.7) 0%, transparent 40%, transparent 60%, rgba(0,0,0,0.85) 100%), radial-gradient(circle at center, transparent 20%, rgba(0,0,0,0.5) 100%)' 
         }}
       />
 
       {/* Hero Content */}
       <div className="relative z-10 flex-1 flex flex-col items-center justify-center text-center px-6 pt-32 pb-40">
         <h1 
-          style={{ fontFamily: "'Instrument Serif', serif" }}
-          className="text-6xl sm:text-8xl md:text-[140px] leading-[0.85] tracking-[-0.04em] max-w-7xl font-normal text-foreground animate-fade-rise"
+          style={{ 
+            fontFamily: "'Instrument Serif', serif",
+            textShadow: '0 8px 24px rgba(0,0,0,0.8), 0 2px 4px rgba(0,0,0,0.5)'
+          }}
+          className="text-6xl sm:text-8xl md:text-[140px] leading-[0.85] tracking-[-0.04em] max-w-7xl font-normal text-white animate-fade-rise"
         >
-          $M<em className="not-italic text-white/70">O</em>J<em className="not-italic text-white/70">O</em>
+          $M<em className="not-italic text-white">O</em>J<em className="not-italic text-white">O</em>
         </h1>
         
-        <p className="text-foreground/90 text-base sm:text-[18px] max-w-[580px] mt-6 mb-12 leading-relaxed animate-fade-rise-delay">
+        <p 
+          style={{ textShadow: '0 2px 8px rgba(0,0,0,1)' }}
+          className="text-white text-base sm:text-[18px] max-w-[580px] mt-6 mb-12 leading-relaxed animate-fade-rise-delay font-semibold drop-shadow-2xl"
+        >
           Matt Furie's first drawing ever that started it all. The genesis moment. Now immortalized on-chain.
         </p>
 

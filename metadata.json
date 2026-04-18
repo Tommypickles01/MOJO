@@ -1,6 +1,6 @@
 {
-  "name": "MOJO Landing",
-  "description": "A cinematic hero section for MOJO with a fullscreen video background and glassmorphic navigation.",
+  "name": "MOJO: Banana Quest 3D",
+  "description": "A high-fidelity 3D collection game featuring the Genesis Mojo mouse, photorealistic bananas, and a garden environment powered by Three.js.",
   "requestFramePermissions": [],
   "majorCapabilities": []
 }

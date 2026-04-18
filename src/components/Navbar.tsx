@@ -7,14 +7,15 @@ export default function Navbar({
   currentPage 
 }: { 
   hasEntered?: boolean;
-  onNavigate: (page: "home" | "lore") => void;
-  currentPage: "home" | "lore";
+  onNavigate: (page: "home" | "lore" | "game") => void;
+  currentPage: "home" | "lore" | "game";
 }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const navLinks = [
     { name: "Home", type: "btn", action: () => onNavigate("home"), active: currentPage === "home" },
     { name: "Lore", type: "btn", action: () => onNavigate("lore"), active: currentPage === "lore" },
+    { name: "Play", type: "btn", action: () => onNavigate("game"), active: currentPage === "game" },
     { name: "Buy Now", type: "link", href: "https://pump.fun/coin/sGzragYKDrmRgCGvJUn9WKwrmnUZwfmkNQLTSPfdMNq" },
     { name: "Community", type: "link", href: "https://x.com/i/communities/2018668722387563000" },
   ];
