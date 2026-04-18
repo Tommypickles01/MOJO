@@ -89,23 +89,20 @@ export default function App() {
 
 
   return (
-    <main className="relative min-h-screen bg-background overflow-x-hidden">
-      <div className="absolute top-0 left-0 w-full z-50">
-        <Navbar 
-          hasEntered={hasEntered} 
-          onNavigate={(page) => setCurrentPage(page)} 
-          currentPage={currentPage}
-        />
-      </div>
-      
-      {currentPage === "home" ? (
-        <Hero hasEntered={hasEntered} onEnter={handleEnter} />
-      ) : currentPage === "lore" ? (
-        <Lore onBack={() => setCurrentPage("home")} />
-      ) : (
-        <Game onBack={() => setCurrentPage("home")} />
-      )}
-    </main>
+    <>
+      <main className="relative min-h-screen bg-background overflow-x-hidden">
+        <div className="absolute top-0 left-0 w-full z-50">
+          <Navbar
+            hasEntered={hasEntered}
+            onNavigate={(page) => setCurrentPage(page)}
+            currentPage={currentPage}
+          />
+        </div>
+        {currentPage === "home" && <Hero hasEntered={hasEntered} onEnter={handleEnter} />}
+      </main>
+      {currentPage === "lore" && <Lore onBack={() => setCurrentPage("home")} />}
+      {currentPage === "game" && <Game onBack={() => setCurrentPage("home")} />}
+    </>
   );
 }
 

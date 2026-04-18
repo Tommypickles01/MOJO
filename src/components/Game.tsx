@@ -444,15 +444,6 @@ export default function Game({ onBack }: GameProps) {
                 <motion.p
                     initial={{ y: 20, opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
-                    transition={{ delay: 0.1 }}
-                    className="text-white/60 mb-4 text-lg font-light tracking-wide leading-relaxed"
-                >
-                    Navigate the garden of abundance. <br/>
-                    Collect the photorealistic yield. Avoid extinction.
-                </motion.p>
-                <motion.p
-                    initial={{ y: 20, opacity: 0 }}
-                    animate={{ y: 0, opacity: 1 }}
                     transition={{ delay: 0.15 }}
                     className="text-white/40 mb-8 text-sm tracking-widest uppercase"
                 >
