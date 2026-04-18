@@ -12,7 +12,7 @@ export default function Lore({ onBack }: { onBack: () => void }) {
       }}
     >
       <img
-        src="/lore.png"
+        src="/lore.png?v=2"
         alt="Mojo Lore"
         style={{ width: "100%", height: "100%", objectFit: "contain" }}
       />
