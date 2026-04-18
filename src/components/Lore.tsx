@@ -7,7 +7,7 @@ export default function Lore({ onBack }: { onBack: () => void }) {
     <motion.section 
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="fixed inset-0 z-40 bg-black"
+      className="fixed inset-0 z-[70] bg-black"
     >
       <img 
         src={loreImageUrl}

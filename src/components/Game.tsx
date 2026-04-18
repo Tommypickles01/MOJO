@@ -284,13 +284,13 @@ function GameScene({
     }
 
     // Spawn Logic
-    if (state.clock.elapsedTime - lastSpawn.current > 1.1) {
+    if (state.clock.elapsedTime - lastSpawn.current > (isMobile ? 1.6 : 1.1)) {
       const type = Math.random() > 0.35 ? "banana" : "hazard";
       setItems(prev => [...prev, {
         id: Math.random(),
         position: [ (Math.random() - 0.5) * spawnWidth, 12, playerZ ],
         type,
-        speed: 6 + Math.random() * 5
+        speed: (isMobile ? 4 : 6) + Math.random() * 4
       }]);
       lastSpawn.current = state.clock.elapsedTime;
     }
@@ -327,8 +327,8 @@ function GameScene({
         ))}
       </group>
 
-      <Environment preset="forest" />
-      <ambientLight intensity={1.2} />
+      {!isMobile && <Environment preset="forest" />}
+      <ambientLight intensity={isMobile ? 2.5 : 1.2} />
       <directionalLight position={[10, 20, 10]} intensity={2.5} color="#fffcf2" castShadow={!isMobile} />
       <pointLight position={[0, 10, 5]} intensity={1.5} color="#ffffff" />
     </>
@@ -390,7 +390,11 @@ export default function Game({ onBack }: GameProps) {
     >
       {/* 3D Scene */}
       <Suspense fallback={<div className="text-white font-mono animate-pulse">INITIATING MOJO REALM...</div>}>
-        <Canvas shadows={!isMobile} dpr={isMobile ? [1, 1.5] : [1, 2]}>
+        <Canvas
+          shadows={!isMobile}
+          dpr={isMobile ? 1 : [1, 2]}
+          gl={{ antialias: !isMobile, powerPreference: "high-performance" }}
+        >
           <PerspectiveCamera makeDefault position={[0, 2, 8]} fov={50} />
           <GameScene 
             gameState={gameState} 

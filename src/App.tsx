@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Hero from "./components/Hero";
 import Navbar from "./components/Navbar";
 import Lore from "./components/Lore";
@@ -25,11 +25,23 @@ export default function App() {
 
   // Using the direct download link for the Dropbox video
   const [videoError, setVideoError] = useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
 
   const handleEnter = () => {
     setIsPlayingIntro(true);
     setVideoError(false);
   };
+
+  useEffect(() => {
+    if (isPlayingIntro && videoRef.current) {
+      videoRef.current.play().catch(() => {
+        if (videoRef.current) {
+          videoRef.current.muted = true;
+          videoRef.current.play().catch(() => {});
+        }
+      });
+    }
+  }, [isPlayingIntro]);
 
   const handleVideoEnd = () => {
     setIsPlayingIntro(false);
@@ -46,9 +58,8 @@ export default function App() {
       <div className="fixed inset-0 z-[100] bg-black flex items-center justify-center">
         {!videoError ? (
           <video
+            ref={videoRef}
             src={introVideoUrl}
-            autoPlay
-            muted
             playsInline
             controls
             className="w-full h-full object-contain overflow-hidden"
