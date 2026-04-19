@@ -15,7 +15,8 @@ export default function Navbar({
   const navLinks = [
     { name: "Home", type: "btn", action: () => onNavigate("home"), active: currentPage === "home" },
     { name: "Lore", type: "btn", action: () => onNavigate("lore"), active: currentPage === "lore" },
-    { name: "Play", type: "btn", action: () => onNavigate("game"), active: currentPage === "game" },
+    { name: "Game 1", type: "btn", action: () => onNavigate("game"), active: currentPage === "game" },
+    { name: "Game 2", type: "link", href: "https://mojogame.vercel.app/" },
     { name: "Buy Now", type: "link", href: "https://pump.fun/coin/sGzragYKDrmRgCGvJUn9WKwrmnUZwfmkNQLTSPfdMNq" },
     { name: "Community", type: "link", href: "https://x.com/i/communities/2018668722387563000" },
   ];
@@ -101,7 +102,3 @@ export default function Navbar({
     </nav>
   );
 }
-
-
-
-
