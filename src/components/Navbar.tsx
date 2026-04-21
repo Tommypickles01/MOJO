@@ -19,6 +19,7 @@ export default function Navbar({
     { name: "Mojo Run", type: "link", href: "https://mojogame.vercel.app/" },
     { name: "Buy Now", type: "link", href: "https://pump.fun/coin/sGzragYKDrmRgCGvJUn9WKwrmnUZwfmkNQLTSPfdMNq" },
     { name: "Community", type: "link", href: "https://x.com/i/communities/2018668722387563000" },
+    { name: "PFP Generator", type: "link", href: "https://mojify-backend-production.up.railway.app" },
   ];
 
   return (
