@@ -439,7 +439,7 @@ export default function Game({ onBack }: GameProps) {
                     style={{ fontFamily: "'Instrument Serif', serif" }}
                     className="text-7xl md:text-9xl text-white mb-4 uppercase italic tracking-tighter"
                 >
-                    Mojo Quest
+                    Banana Catch
                 </motion.h2>
                 <motion.p
                     initial={{ y: 20, opacity: 0 }}
