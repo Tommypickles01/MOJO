@@ -72,7 +72,7 @@ export default function Navbar({
 
       {/* Mobile Menu Overlay */}
       {isMenuOpen && (
-        <div className="fixed inset-0 top-[80px] z-[100] bg-background/95 backdrop-blur-xl md:hidden flex flex-col items-center pt-20 gap-8 animate-in fade-in slide-in-from-top-4 duration-300">
+        <div className="fixed inset-0 top-[80px] z-[100] bg-black/95 backdrop-blur-xl md:hidden flex flex-col items-center pt-20 gap-8 animate-in fade-in slide-in-from-top-4 duration-300">
           {navLinks.map((link) => (
             link.type === "btn" ? (
               <button 

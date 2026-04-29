@@ -90,7 +90,7 @@ export default function App() {
 
   return (
     <>
-      <main className="relative min-h-screen bg-background overflow-x-hidden">
+      <main className="relative min-h-screen bg-black overflow-x-hidden">
         <div className="absolute top-0 left-0 w-full z-50">
           <Navbar
             hasEntered={hasEntered}
