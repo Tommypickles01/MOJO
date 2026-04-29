@@ -49,10 +49,13 @@ export default function Hero({ hasEntered, onEnter }: { hasEntered: boolean, onE
             Enter
           </button>
         )}
+      </div>
 
+      {/* Legal Disclaimer — pinned to bottom of hero */}
+      <div className="absolute bottom-0 left-0 right-0 z-10 px-5 sm:px-10 pb-5 sm:pb-6">
         <p
-          style={{ textShadow: '0 1px 4px rgba(0,0,0,0.9)' }}
-          className="text-white/50 text-[11px] max-w-[520px] mt-6 leading-relaxed text-center px-4"
+          className="text-white/80 text-[11px] sm:text-[12.5px] max-w-[640px] mx-auto leading-[1.6] text-center"
+          style={{ textShadow: '0 1px 6px rgba(0,0,0,1)' }}
         >
           $MOJO is a decentralized community memecoin paying homage to Mojo, an early character drawn by artist Matt Furie. This project is not affiliated with, endorsed by, sponsored by, or connected to Matt Furie or any related rights-holder. $MOJO has no central team, no foundation, and no commercial relationship with any trademarked entity. The token is intended for cultural and community participation purposes only and does not represent equity, investment contracts, or any utility beyond memetic expression.
         </p>
