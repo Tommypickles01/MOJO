@@ -2,7 +2,7 @@ export default function Hero({ hasEntered, onEnter }: { hasEntered: boolean, onE
   const videoUrl = "/hero_bg.mp4";
 
   return (
-    <section className="relative w-full h-[100svh] overflow-hidden flex flex-col">
+    <section className="relative w-full h-[100dvh] overflow-hidden flex flex-col">
       {/* Background Video */}
       <video
         autoPlay

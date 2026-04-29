@@ -38,8 +38,8 @@
     @apply border-border;
   }
   body {
-    @apply bg-[#a9d6e5] text-foreground font-body antialiased;
-    background-color: #a9d6e5;
+    @apply bg-black text-foreground font-body antialiased;
+    background-color: #000;
   }
 }
 
