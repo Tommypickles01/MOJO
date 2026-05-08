@@ -17,7 +17,7 @@ export default function Navbar({
     { name: "Lore", type: "btn", action: () => onNavigate("lore"), active: currentPage === "lore" },
     { name: "Banana Catch", type: "btn", action: () => onNavigate("game"), active: currentPage === "game" },
     { name: "Mojo Run", type: "link", href: "https://mojogame.vercel.app/" },
-    { name: "Mojo Dojo", type: "link", href: "https://mojodojo.vercel.app/" },
+    { name: "Mojo Dojo", type: "link", href: "https://mojodojo.solmojo.com/" },
     { name: "Buy Now", type: "link", href: "https://pump.fun/coin/sGzragYKDrmRgCGvJUn9WKwrmnUZwfmkNQLTSPfdMNq" },
     { name: "Community", type: "link", href: "https://x.com/i/communities/2018668722387563000" },
     { name: "PFP Generator", type: "link", href: "https://mojify-backend-production.up.railway.app" },
